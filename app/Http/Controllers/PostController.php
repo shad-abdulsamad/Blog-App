@@ -8,39 +8,56 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    //
-    public function showCreatePost()
-    {
-        return view('create-post');
-    }
-
-    public function createPost(Request $request)
+    public function actuallyUpdate(Post $post, Request $request)
     {
         $incomingFields = $request->validate([
-            "title" => "required",
-            "body" => "required"
+            'title' => 'required',
+            'body' => 'required'
         ]);
+
+        $incomingFields['title'] = strip_tags($incomingFields['title']);
+        $incomingFields['body'] = strip_tags($incomingFields['body']);
+
+        $post->update($incomingFields);
+
+        return back()->with('success', 'Post successfully updated.');
+    }
+
+    public function showEditForm(Post $post)
+    {
+        return view('edit-post', ['post' => $post]);
+    }
+
+    public function delete(Post $post)
+    {
+        $post->delete();
+        return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfully deleted.');
+    }
+
+    public function viewSinglePost(Post $post)
+    {
+        $post['body'] = strip_tags(Str::markdown($post->body), '<p><ul><ol><li><strong><em><h3><br>');
+        return view('single-post', ['post' => $post]);
+    }
+
+    public function storeNewPost(Request $request)
+    {
+        $incomingFields = $request->validate([
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['body'] = strip_tags($incomingFields['body']);
         $incomingFields['user_id'] = auth()->id();
 
         $newPost = Post::create($incomingFields);
-        return redirect("/posts/{$newPost->id}")->with('success', 'Post Created Successfully');
+
+        return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
     }
 
-    public function showSinglePost(Post $post)
+    public function showCreateForm()
     {
-        $post['body'] = strip_tags(Str::markdown($post->body), '<p><ul><ol><li><strong><em><h1><h2><h3><h4><h5><h6><br>');
-        return view('single-post', ["post" => $post]);
-    }
-
-    public function delete(Request $request, Post $post)
-    {
-        if ($request->user()->cannot('delete', $post)) {
-            return "You can't do that";
-        }
-        $post->delete();
-
-        return redirect('/profile/' . auth()->user()->username)->with('success', 'Post successfuly deleted');
+        return view('create-post');
     }
 }
