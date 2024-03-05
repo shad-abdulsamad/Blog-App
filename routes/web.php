@@ -16,13 +16,12 @@ use App\Http\Controllers\UserController;
 */
 
 //User related routes
-Route::get('/', [UserController::class, 'homePage']);
-
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
+Route::get('/', [UserController::class, 'homePage'])->name('login');
+Route::post('/register', [UserController::class, 'register'])->middleware('guest');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest');
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth');
 
 //Post related routes
-Route::get('/create-post', [PostController::class, 'showCreatePost']);
-Route::post('/create-post', [PostController::class, 'createPost']);
+Route::get('/create-post', [PostController::class, 'showCreatePost'])->middleware('auth');
+Route::post('/create-post', [PostController::class, 'createPost'])->middleware('auth');
 Route::get('/posts/{post}', [PostController::class, 'showSinglePost']);
