@@ -50,4 +50,11 @@ class UserController extends Controller
             return redirect('/')->with('error', 'Invalid Login');
         }
     }
+
+    public function profile(User $user)
+    {
+        $posts = $user->posts()->latest()->get();
+        $postCount = $user->posts()->count();
+        return view('profile-posts', ['username' => $user->username, 'posts' => $posts, 'postCount' => $postCount]);
+    }
 }
