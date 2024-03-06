@@ -53,7 +53,7 @@ class PostController extends Controller
 
         $newPost = Post::create($incomingFields);
 
-        return redirect("/post/{$newPost->id}")->with('success', 'New post successfully created.');
+        return redirect("/posts/{$newPost->id}")->with('success', 'New post successfully created.');
     }
 
     public function showCreateForm()

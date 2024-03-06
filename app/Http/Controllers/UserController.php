@@ -24,7 +24,7 @@ class UserController extends Controller
         if (auth()->check()) {
             return view('homepage-feed');
         } else {
-            return view('homepage');
+            return view('home');
         }
     }
 
