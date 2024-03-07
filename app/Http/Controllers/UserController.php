@@ -57,4 +57,15 @@ class UserController extends Controller
         auth()->login($user);
         return redirect('/')->with('success', 'Thank you for creating an account.');
     }
+
+    public function showAvatarForm()
+    {
+        return view('avatar-form');
+    }
+
+    public function storeAvatar(Request $request)
+    {
+        $request->file('avatar')->store('public/avatars');
+        return 'Avatar Updated';
+    }
 }
