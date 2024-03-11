@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function profile(User $user)
     {
-        return view('profile-posts', ['username' => $user->username, 'posts' => $user->posts()->latest()->get(), 'postCount' => $user->posts()->count()]);
+        return view('profile-posts', ['avatar' => $user->avatar, 'username' => $user->username, 'posts' => $user->posts()->latest()->get(), 'postCount' => $user->posts()->count()]);
     }
 
     public function logout()
@@ -77,5 +77,19 @@ class UserController extends Controller
 
         $imgData = Image::make($request->file('avatar'))->fit(120)->encode('jpg');
         Storage::put("public/avatars/" . $filename, $imgData);
+
+        $oldAvatar = $user->avatar;
+
+        $user->avatar = $filename;
+        $user->save();
+
+        if ($oldAvatar != 'fallback-avatar.jpg') {
+            Storage::delete(str_replace("/storage/", "public/", $oldAvatar));
+        }
+
+        return back()->with('Avatar Updated');
+
+
+        return redirect('/')->with('success', 'Avatar updated');
     }
 }
