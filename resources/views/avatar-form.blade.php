@@ -4,9 +4,9 @@
         <form action="/manage-avatar" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-3">
-                <input type="file" name="avatar" required>
-                @error('avatar')
-                <p class="alert small alert-danger shadow-sm">{{$message}}</p>
+                <input type="file" name="avatar">
+                @error('avatar') 
+                <p class="alert small alert-danger shadow-sm mt-2">{{$message}}</p>
                 @enderror
             </div>
             <button class="btn btn-primary">Save</button>
