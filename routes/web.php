@@ -31,6 +31,7 @@ Route::get('/posts/{post}', [PostController::class, 'viewSinglePost']);
 Route::delete('/posts/{post}', [PostController::class, 'delete'])->middleware('can:delete,post');
 Route::get('/posts/{post}/edit', [PostController::class, 'showEditForm'])->middleware('can:update,post');
 Route::put('/posts/{post}', [PostController::class, 'actuallyUpdate'])->middleware('can:update,post');
+Route::get('/search/{term}', [PostController::class, 'search']);
 
 //follower related routes
 Route::post('/create-follow/{user:username}', [FollowController::class, 'createFollow'])->middleware('mustBeLoggedIn');
